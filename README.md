@@ -25,7 +25,6 @@ task-specific data paths are in `config/ppi.yaml`, `smpi.yaml`, `dpi.yaml`, and 
 TriFuseSite/
 ├── config/                 # Model and training configurations
 ├── dataset/                # Benchmark sequences, labels, splits and PPI features
-├── data/                   # Prepared model inputs
 ├── trifusesite/
 │   ├── models/             # TriFuseSite model
 │   ├── modules/            # Semantic, graph and geometric encoders
@@ -34,8 +33,6 @@ TriFuseSite/
 │   ├── engine.py           # Training and inference
 │   ├── metrics.py          # Residue-level evaluation
 │   └── statistics.py       # Paired-structure statistics
-├── pretrain_ckpt/          # Local pretrained model directory
-├── ipynb_demo/             # Forward-pass example
 ├── scripts/                # Input conversion utilities
 ├── tests/                  # Model and data tests
 ├── main_prepare_datasets.py
@@ -93,7 +90,7 @@ python main_prepare_datasets.py --tasks smpi
 ```
 
 For PPI, supply the benchmark pseudopositions and distance maps using
-`--ppi-geometry-root`. The [input schema](data/README.md) describes these arrays
+`--ppi-geometry-root`. The [input schema](dataset/README.md#model-input-preparation) describes these arrays
 and the structure index. Missing coordinates are handled through structural
 masks while retaining sequence positions and labels.
 
@@ -107,7 +104,7 @@ python main_extract_esm.py --manifest data/smpi/test/manifest.jsonl --allow-down
 
 ESM-2 uses `esm2_t33_650M_UR50D`, a 1022-residue window, 128-residue overlap,
 and float16 caches. For offline extraction, pass
-`--model pretrain_ckpt/esm2_t33_650M_UR50D` instead of `--allow-download`.
+`--model /path/to/local/esm2_t33_650M_UR50D` instead of `--allow-download`.
 
 ## Training
 
@@ -158,21 +155,8 @@ bound/unbound pair is evaluated using the same checkpoint and threshold.
 `main_paired_analysis.py` summarizes ten runs using the pair list
 `dataset/PPI/pairs.jsonl`; run it with `--help` for the required input paths.
 
-## Tests and example
+## Tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
-
-`ipynb_demo/quick_start.ipynb` demonstrates a forward pass and intermediate
-representations using synthetic inputs.
-
-## Data attribution
-
-PPI benchmarks and node descriptors follow
-[GraphPPIS](https://github.com/biomed-AI/GraphPPIS) and
-[GTE-PPIS](https://github.com/Reverie-12/GTE-PPIS).
-SMPI, DPI and RPI label files are distributed through
-[ALLSites](https://github.com/idrblab/ALLSites); DPI/RPI originate from the
-GraphBind benchmarks. Please retain the original dataset attribution and
-observe the respective source terms when reusing these resources.

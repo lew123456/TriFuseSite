@@ -13,6 +13,3 @@ data/**/*.cif
 dataset/structures/**/*.pdb
 dataset/structures/**/*.cif
 dataset/geometry/ppi/**/*.npy
-pretrain_ckpt/**/*.pt
-pretrain_ckpt/**/*.bin
-pretrain_ckpt/**/*.safetensors

@@ -71,7 +71,7 @@ def prepare(manifest, output, task):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--manifest', required=True, help='Raw JSONL, see data/README.md')
+    p.add_argument('--manifest', required=True, help='Raw JSONL, see dataset/README.md')
     p.add_argument('--output', required=True)
     p.add_argument('--task', required=True, choices=['ppi', 'smpi', 'dpi', 'rpi'])
     a = p.parse_args()
