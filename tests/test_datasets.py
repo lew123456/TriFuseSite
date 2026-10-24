@@ -3,9 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from main_validate_datasets import validate
-from main_prepare_datasets import load_catalog, load_structure_index, resolve_records
-from main_fetch_structures import fetch, is_structure
+from trifusesite.cli.validate_datasets import validate
+from trifusesite.cli.prepare_datasets import load_catalog, load_structure_index, resolve_records
+from trifusesite.cli.fetch_structures import fetch, is_structure
 
 ROOT=Path(__file__).resolve().parents[1]
 

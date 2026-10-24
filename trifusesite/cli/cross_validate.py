@@ -10,8 +10,8 @@ from trifusesite.data.dataset import ProteinDataset
 from trifusesite.engine import train, predict, write_json
 from trifusesite.metrics import evaluate_rows, validation_mcc_threshold
 
-if __name__ == '__main__':
-    p = argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    p = argparse.ArgumentParser(prog='trifusesite cross-validate')
     p.add_argument('--configs', nargs='+', required=True, help='Candidate PPI YAML configurations')
     p.add_argument('--train-manifest', required=True)
     p.add_argument('--output', required=True)
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     w.add_argument('--balanced-class-weights', action='store_true')
     p.add_argument('--auprc-method', choices=['average_precision', 'trapezoid'])
     p.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
-    a = p.parse_args()
+    a = p.parse_args(argv)
     base_runtime = load_config(a.configs[0])['runtime']
     seed = a.seed if a.seed is not None else base_runtime['seed']
     method = a.auprc_method or base_runtime['auprc_method']
@@ -70,3 +70,7 @@ if __name__ == '__main__':
                                       'seed': seed, 'auprc_method': method,
                                       'training_protein_ids': [r['id'] for r in dataset.records],
                                       'selection_data': 'training_set_out_of_fold_predictions'})
+
+
+if __name__ == '__main__':
+    main()

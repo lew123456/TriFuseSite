@@ -22,13 +22,13 @@ def encode(sequence, tokenizer, model, device):
             break
     return (total / counts).astype(np.float16)
 
-if __name__ == '__main__':
-    p = argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    p = argparse.ArgumentParser(prog='trifusesite extract-esm')
     p.add_argument('--manifest', required=True)
     p.add_argument('--model', default='facebook/esm2_t33_650M_UR50D', help='Model ID or local model directory')
     p.add_argument('--allow-download', action='store_true', help='Explicitly allow pretrained ESM-2 download')
     p.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
-    a = p.parse_args()
+    a = p.parse_args(argv)
     from transformers import AutoTokenizer, AutoModel
     tokenizer = AutoTokenizer.from_pretrained(a.model, local_files_only=not a.allow_download)
     model = AutoModel.from_pretrained(a.model, local_files_only=not a.allow_download).to(a.device).eval()
@@ -45,3 +45,7 @@ if __name__ == '__main__':
         out.parent.mkdir(parents=True, exist_ok=True)
         np.save(out, encode(sequence, tokenizer, model, a.device))
         print(row['id'], len(sequence), flush=True)
+
+
+if __name__ == '__main__':
+    main()

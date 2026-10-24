@@ -7,7 +7,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 
 def is_structure(payload):
     return len(payload)>100 and (b'\nATOM  ' in payload or b'_atom_site.' in payload or payload.startswith(b'ATOM  '))
@@ -41,13 +41,13 @@ def fetch(request,root=ROOT):
             errors.append({'url':url,'error':str(error)})
     return dict(row,status='unresolved',errors=errors)
 
-def main():
-    p=argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    p=argparse.ArgumentParser(prog='trifusesite fetch-structures')
     p.add_argument('--tasks',nargs='+',choices=['ppi','smpi','dpi','rpi'],default=['ppi','smpi','dpi','rpi'])
     p.add_argument('--download',action='store_true',help='Perform network downloads; otherwise only print the request plan')
     p.add_argument('--workers',type=int,default=4)
     p.add_argument('--report',default='data/structure_download_report.json')
-    a=p.parse_args()
+    a=p.parse_args(argv)
     rows=json.loads((ROOT/'dataset/metadata/structure_requests.json').read_text(encoding='utf-8'))
     rows=[r for r in rows if any(x.split('/')[0] in a.tasks for x in r['uses'])]
     if not a.download:

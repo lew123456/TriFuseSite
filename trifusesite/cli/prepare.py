@@ -68,10 +68,14 @@ def prepare(manifest, output, task):
     save_jsonl(output / 'preprocessing.jsonl', report)
     return output / 'manifest.jsonl'
 
-if __name__ == '__main__':
-    p = argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    p = argparse.ArgumentParser(prog='trifusesite prepare')
     p.add_argument('--manifest', required=True, help='Raw JSONL, see dataset/README.md')
     p.add_argument('--output', required=True)
     p.add_argument('--task', required=True, choices=['ppi', 'smpi', 'dpi', 'rpi'])
-    a = p.parse_args()
+    a = p.parse_args(argv)
     print(prepare(a.manifest, a.output, a.task))
+
+
+if __name__ == '__main__':
+    main()

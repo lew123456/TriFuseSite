@@ -8,7 +8,7 @@ from trifusesite.data.dataset import ProteinDataset
 from trifusesite.engine import train
 
 def parser():
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser(prog='trifusesite train')
     p.add_argument('--config', required=True)
     p.add_argument('--train-manifest')
     p.add_argument('--valid-manifest')
@@ -16,7 +16,7 @@ def parser():
     p.add_argument('--output', required=True)
     p.add_argument('--epochs', type=int, help='Default: config runtime.epochs (20)')
     p.add_argument('--seed', type=int, help='Default: config runtime.seed (2025)')
-    p.add_argument('--cv-selection', help='PPI refit: selection.json from main_cross_validate.py')
+    p.add_argument('--cv-selection', help='PPI refit: selection.json from main.py cross-validate')
     w = p.add_mutually_exclusive_group()
     w.add_argument('--class-weights', type=float, nargs=2, metavar=('W0', 'W1'))
     w.add_argument('--balanced-class-weights', action='store_true', help='N/(2*Nc) from training labels only; operational choice')
@@ -27,8 +27,8 @@ def parser():
     p.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
     return p
 
-def main():
-    a = parser().parse_args()
+def main(argv=None):
+    a = parser().parse_args(argv)
     c = load_config(a.config)
     runtime = c['runtime']
     epochs = a.epochs if a.epochs is not None else runtime['epochs']
@@ -41,7 +41,7 @@ def main():
     if a.refit and a.valid_manifest:
         raise ValueError('--refit and --valid-manifest cannot be combined')
     if c['task'] == 'ppi' and not a.refit and not valid_path:
-        raise ValueError('Use main_cross_validate.py for five-fold PPI selection, then --refit for Train334')
+        raise ValueError('Use main.py cross-validate for five-fold PPI selection, then --refit for Train334')
     validation = None if a.refit or not valid_path else ProteinDataset(valid_path, c['task'])
     threshold, provenance = a.threshold, None
     if a.cv_selection:

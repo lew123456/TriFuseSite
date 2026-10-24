@@ -3,7 +3,7 @@ import argparse
 import hashlib
 import json
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 def validate(root=ROOT,checksums=True):
     root=Path(root)
     specs=json.loads((root/'dataset/metadata/partition_catalog.json').read_text(encoding='utf-8'))['partitions']
@@ -29,6 +29,10 @@ def validate(root=ROOT,checksums=True):
             count+=1
     return {'partitions':results,'checked_files':count,'status':'pass'}
 
-if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--skip-checksums',action='store_true');a=p.parse_args()
+def main(argv=None):
+    p=argparse.ArgumentParser(prog='trifusesite validate-datasets');p.add_argument('--skip-checksums',action='store_true');a=p.parse_args(argv)
     print(json.dumps(validate(checksums=not a.skip_checksums),indent=2))
+
+
+if __name__ == '__main__':
+    main()

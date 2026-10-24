@@ -161,7 +161,7 @@ class DataMetricTests(unittest.TestCase):
         np.testing.assert_allclose(balanced_weights(dataset),[7/10,7/4])
 
     def test_repeat_plan(self):
-        from main_repeat import build_plan
+        from trifusesite.cli.repeat import build_plan
         p=build_plan(ROOT/'config/ppi.yaml',ROOT/'runs/not_executed')
         self.assertEqual(p['seeds'],list(range(2025,2035)))
         self.assertEqual(len(p['commands']),40)
@@ -235,12 +235,12 @@ class EndToEndTests(unittest.TestCase):
     def test_training_cli_uses_smpi_defaults(self):
         from unittest.mock import patch
         from types import SimpleNamespace
-        import main_train
+        from trifusesite.cli import train as train_cli
         dataset=SimpleNamespace(records=[{'id':'synthetic_only'}])
-        argv=['main_train.py','--config',str(ROOT/'config/smpi.yaml'),'--output','unused_synthetic_run']
-        with patch('sys.argv',argv), patch.object(main_train,'ProteinDataset',return_value=dataset), \
-                patch.object(main_train,'train') as call:
-            main_train.main()
+        argv=['trifusesite train','--config',str(ROOT/'config/smpi.yaml'),'--output','unused_synthetic_run']
+        with patch('sys.argv',argv), patch.object(train_cli,'ProteinDataset',return_value=dataset), \
+                patch.object(train_cli,'train') as call:
+            train_cli.main()
         options=call.call_args.kwargs
         self.assertEqual(options['epochs'],20)
         self.assertEqual(options['seed'],2025)
@@ -252,7 +252,7 @@ class EndToEndTests(unittest.TestCase):
     def test_ppi_refit_cli_imports_and_checks_cv_selection(self):
         from unittest.mock import patch
         from types import SimpleNamespace
-        import main_train
+        from trifusesite.cli import train as train_cli
         dataset=SimpleNamespace(records=[{'id':'synthetic_only'}])
         c=load_config(ROOT/'config/ppi.yaml')
         selection={'seed':2025,'auprc_method':'average_precision',
@@ -262,11 +262,11 @@ class EndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'selection.json'
             path.write_text(json.dumps(selection),encoding='utf-8')
-            argv=['main_train.py','--config',str(ROOT/'config/ppi.yaml'),'--output',str(Path(tmp)/'run'),
+            argv=['trifusesite train','--config',str(ROOT/'config/ppi.yaml'),'--output',str(Path(tmp)/'run'),
                   '--refit','--cv-selection',str(path)]
-            with patch('sys.argv',argv), patch.object(main_train,'ProteinDataset',return_value=dataset), \
-                    patch.object(main_train,'train') as call:
-                main_train.main()
+            with patch('sys.argv',argv), patch.object(train_cli,'ProteinDataset',return_value=dataset), \
+                    patch.object(train_cli,'train') as call:
+                train_cli.main()
             options=call.call_args.kwargs
             self.assertEqual(options['epochs'],7)
             self.assertEqual(options['threshold'],.375)
@@ -274,10 +274,10 @@ class EndToEndTests(unittest.TestCase):
             self.assertFalse(options['fit_threshold'])
             self.assertIsNone(call.call_args.args[2])
             with patch('sys.argv',argv+['--seed','2026']), \
-                    patch.object(main_train,'ProteinDataset',return_value=dataset), \
-                    patch.object(main_train,'train') as rejected:
+                    patch.object(train_cli,'ProteinDataset',return_value=dataset), \
+                    patch.object(train_cli,'train') as rejected:
                 with self.assertRaisesRegex(ValueError,'seeds differ'):
-                    main_train.main()
+                    train_cli.main()
                 rejected.assert_not_called()
 
     def test_validation_early_stopping_and_threshold(self):
@@ -324,7 +324,7 @@ class EndToEndTests(unittest.TestCase):
                 map_structure('ACDE',path,'Z')
 
     def test_esm_window_average_and_cache_precision(self):
-        from main_extract_esm import encode
+        from trifusesite.cli.extract_esm import encode
         from types import SimpleNamespace
         class Batch(dict):
             def to(self, device):
@@ -348,7 +348,7 @@ class EndToEndTests(unittest.TestCase):
         self.assertTrue((result[1022:]==2).all())
 
     def test_ppi_feature_import_without_backbone(self):
-        from main_prepare import prepare
+        from trifusesite.cli.prepare import prepare
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
             fields={}
@@ -368,7 +368,7 @@ class EndToEndTests(unittest.TestCase):
                 self.assertEqual(z['global_edge_index'].shape,(2,9))
 
     def test_prepare_train_predict_checkpoint(self):
-        from main_prepare import prepare
+        from trifusesite.cli.prepare import prepare
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             raw = root/'raw.jsonl'

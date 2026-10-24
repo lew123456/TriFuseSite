@@ -2,10 +2,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from main_prepare import prepare
+from .prepare import prepare
 from trifusesite.data.dataset import read_jsonl, save_jsonl
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 
 def load_catalog(root=ROOT):
     return json.loads((Path(root)/'dataset/metadata/partition_catalog.json').read_text(encoding='utf-8'))['partitions']
@@ -60,15 +60,15 @@ def resolve_records(spec, root=ROOT, structure_index=None, geometry_root=None):
         records.append(row)
     return records,missing
 
-def main():
-    p=argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    p=argparse.ArgumentParser(prog='trifusesite prepare-datasets')
     p.add_argument('--tasks',nargs='+',choices=['ppi','smpi','dpi','rpi'],default=['ppi','smpi','dpi','rpi'])
     p.add_argument('--splits',nargs='+',help='Optional split names, e.g. train valid test or test60')
     p.add_argument('--structure-index',help='Optional JSONL mapping task/id to exact local structure path or verified null')
     p.add_argument('--ppi-geometry-root',help='Directory containing pseudopositions/ID.npy and distance_map/ID.npy')
     p.add_argument('--output-root',default='data',help='Prepared cache root; matches the task configurations by default')
     p.add_argument('--check-only',action='store_true',help='Report input availability without preparing or masking anything')
-    a=p.parse_args()
+    a=p.parse_args(argv)
     specs=[s for s in load_catalog() if s['task'] in a.tasks and (not a.splits or s['split'] in a.splits)]
     if not specs:raise ValueError('No selected benchmark partitions')
     index=load_structure_index(a.structure_index)
