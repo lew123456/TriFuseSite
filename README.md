@@ -2,30 +2,56 @@
 
 **A Unified Multisource Framework for Conformation-Robust Protein Binding-Site Prediction**
 
-Residue-level binding-site prediction for protein–protein, small-molecule, DNA
-and RNA interactions using frozen ESM-2 representations and multiscale geometry.
-The same architecture is trained separately for each task.
+[Data preparation](dataset/README.md) · [Command guide](trifusesite/cli/README.md) · [Configurations](config/)
 
-## Repository structure
+## 🧬 Abstract
+
+TriFuseSite is a multisource framework for residue-level protein binding-site
+prediction across protein–protein (PPI), protein–small molecule (SMPI),
+protein–DNA (DPI), and protein–RNA (RPI) interactions. It combines frozen ESM-2
+sequence representations, residue descriptors, and multiscale structural
+information to integrate sequence context with local and global geometry.
+All four tasks use the same network architecture, with task-specific models
+trained independently.
+
+## 🧠 Model Architecture
+
+| Component | Role |
+|---|---|
+| Semantic fusion | Integrates 1,280-dimensional ESM-2 embeddings with 62-dimensional residue descriptors through a learnable scalar gate. |
+| Local Patch branch | Aggregates local residue neighborhoods using three patch-encoding layers. |
+| Global branch | Models residue-graph context with eight edge-aware graph-attention layers. |
+| Cross-branch attention | Uses Patch-derived queries and keys to aggregate Global value representations. |
+| Distance geometry | Encodes continuous distances with RBF features and two geometric attention layers. |
+| Residue classifier | Combines graph and geometric representations to predict a binding probability for each residue. |
+
+The implementation is organized into [model definitions](trifusesite/models/)
+and [network modules](trifusesite/modules/). Shared architecture and training
+settings are defined in [config/base.yaml](config/base.yaml).
+
+## 📁 Project Structure
 
 ```text
 TriFuseSite/
-├── config/
-├── dataset/
-├── scripts/
-├── tests/
-├── trifusesite/
-│   ├── cli/
-│   ├── data/
-│   ├── losses/
-│   ├── models/
-│   └── modules/
-├── main.py
-├── pyproject.toml
-└── requirements.txt
+├── config/                 # Shared settings and task-specific YAML files
+├── dataset/                # Benchmark sequences, labels, splits and PPI descriptors
+├── scripts/                # Data conversion and Bash/PowerShell launchers
+├── tests/                  # Model, data and command-line tests
+├── trifusesite/            # Core Python package
+│   ├── cli/                # Command implementations and detailed usage guide
+│   ├── data/               # Sequence, structure and graph preprocessing
+│   ├── losses/             # Weighted residue-classification loss
+│   ├── models/             # TriFuseSite network definition
+│   ├── modules/            # Semantic, Patch/Global and geometry encoders
+│   ├── engine.py           # Training, checkpoints and inference
+│   ├── metrics.py          # Residue-level evaluation metrics
+│   └── statistics.py       # Paired-structure statistical analysis
+├── main.py                 # Unified command-line entry point
+├── pyproject.toml          # Package metadata and console command
+└── requirements.txt        # Python dependencies
 ```
 
-## Installation
+## 🛠️ Installation
 
 ```bash
 git clone https://github.com/lew123456/TriFuseSite.git
@@ -37,52 +63,47 @@ pip install -r requirements.txt
 pip install -e . --no-deps
 ```
 
-For CPU execution, install the CPU build of PyTorch instead.
+The study environment uses PyTorch 2.8.0 with CUDA 12.8. For CPU execution,
+install the CPU build of PyTorch instead.
 
-## Data preparation
+## 📊 Benchmark Datasets
 
-Benchmark sequences, labels, split lists and PPI descriptors are in
-[dataset/](dataset/). See the [input formats](dataset/README.md) for structure
-coordinates and the additional PPI geometry arrays.
+| Task | Training | Validation | Test sets | Configuration |
+|---|---:|---|---|---|
+| PPI | 334 | Five-fold cross-validation | Test60, Test315-28 (287), Btest25, UBtest25 | [ppi.yaml](config/ppi.yaml) |
+| SMPI | 1,628 | 348 | Test348 | [smpi.yaml](config/smpi.yaml) |
+| DPI | 458 | 115 | Test129 | [dpi.yaml](config/dpi.yaml) |
+| RPI | 396 | 99 | Test117 | [rpi.yaml](config/rpi.yaml) |
 
-```bash
-python main.py validate-datasets
-python main.py fetch-structures --tasks smpi dpi rpi --download
-python main.py prepare-datasets --tasks smpi
-for split in train valid test; do
-    python main.py extract-esm --manifest "data/smpi/$split/manifest.jsonl" --allow-download
-done
-```
+Benchmark records, split lists, paired-structure mappings and PPI descriptors
+are organized in [dataset/](dataset/). The [data guide](dataset/README.md)
+describes file formats, structure mapping and feature preparation.
 
-## Usage
+## 🚀 Getting Started
 
-Run commands from the repository root. Use `config/dpi.yaml` or `config/rpi.yaml`
-for the other tasks; model and training settings are in [config/](config/).
-Prediction requires a trained checkpoint, which is generated by training and
-is not bundled with the repository.
+Run commands from the repository root. First follow the
+[data preparation workflow](dataset/README.md#preprocessing-workflow), then
+select the configuration for the interaction task.
 
 ```bash
-python main.py train --config config/smpi.yaml --output runs/smpi --device cuda
-python main.py predict --checkpoint runs/smpi/model.pt --manifest data/smpi/test/manifest.jsonl --output runs/smpi/predictions.jsonl
-python main.py evaluate --checkpoint runs/smpi/model.pt --manifest data/smpi/test/manifest.jsonl --output runs/smpi/test_metrics.json
+python main.py train \
+    --config config/smpi.yaml \
+    --output runs/smpi \
+    --device cuda
 ```
 
-<details>
-<summary>PPI cross-validation and paired-structure experiments</summary>
+The [command guide](trifusesite/cli/README.md) covers training outputs,
+prediction, evaluation, PPI cross-validation and paired-structure experiments.
 
 ```bash
-python main.py cross-validate --configs config/ppi.yaml --train-manifest data/ppi/train/manifest.jsonl --output runs/ppi_cv
-python main.py train --config config/ppi.yaml --refit --cv-selection runs/ppi_cv/selection.json --output runs/ppi
-python main.py repeat --config config/ppi.yaml --output runs/ppi_repeated --dry-run
-python main.py paired-analysis --help
+python main.py --help
+python main.py train --help
 ```
 
-Remove `--dry-run` to execute the repeated experiments. Each bound/unbound pair
-uses the same checkpoint and classification threshold.
+After installation, `trifusesite` can also be used in place of `python main.py`.
 
-</details>
+## 🧪 Tests
 
-List commands with `python main.py --help`; append `--help` to any command for
-its arguments. After installation, `trifusesite` is an equivalent entry point.
-
-Run tests with `python -m unittest discover -s tests -v`.
+```bash
+python -m unittest discover -s tests -v
+```

@@ -89,6 +89,64 @@ structural confidence/masks and graph arrays. A manifest entry is:
 requires `ppi_features` paths for the four descriptor arrays and two geometry
 arrays. Use `scripts/from_triplet_fasta.py` to convert three-line benchmark files.
 
+## Preprocessing workflow
+
+Run these commands from the repository root. Inspect file availability before
+building the task caches:
+
+```bash
+python main.py validate-datasets
+python main.py prepare-datasets --tasks smpi dpi rpi --check-only
+```
+
+### Coordinate inputs
+
+Coordinate files and PPI geometry arrays are additional inputs to the distributed
+sequence, label and descriptor files. The structure URL list is provided in
+`metadata/structure_requests.json`. Download the coordinate inputs with:
+
+```bash
+python main.py fetch-structures --tasks smpi dpi rpi --download
+```
+
+For local structure files or unavailable structures, pass a `--structure-index`
+using the mapping format described above. Entries with `path: null` and a reason
+retain the protein and its labels while applying the structure mask.
+
+After resolving the structure paths, prepare the required task caches:
+
+```bash
+python main.py prepare-datasets --tasks smpi dpi rpi
+```
+
+For PPI, obtain the benchmark pseudopositions and distance maps described above,
+and provide their parent directory through `--ppi-geometry-root`:
+
+```bash
+python main.py prepare-datasets --tasks ppi --ppi-geometry-root /path/to/ppi_geometry
+```
+
+### ESM-2 embeddings
+
+Generate embeddings for every prepared partition. For example, for SMPI:
+
+```bash
+for split in train valid test; do
+    python main.py extract-esm \
+        --manifest "data/smpi/$split/manifest.jsonl" \
+        --allow-download
+done
+```
+
+`--allow-download` loads the public `facebook/esm2_t33_650M_UR50D` model.
+For offline use, supply a local model directory with
+`--model /path/to/local/esm2_t33_650M_UR50D` instead. The extractor uses layer-33
+representations, a 1,022-residue window with a 128-residue overlap, and float16
+caches. ESM-2 remains frozen during TriFuseSite training.
+
+The generated manifests and `.esm.npy` files are then consumed by the training
+and prediction commands in the [command guide](../trifusesite/cli/README.md).
+
 ## Sources
 
 - PPI: [GTE-PPIS](https://github.com/Reverie-12/GTE-PPIS), revision
