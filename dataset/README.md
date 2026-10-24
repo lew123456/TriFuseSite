@@ -146,16 +146,3 @@ caches. ESM-2 remains frozen during TriFuseSite training.
 
 The generated manifests and `.esm.npy` files are then consumed by the training
 and prediction commands in the [command guide](../trifusesite/cli/README.md).
-
-## Sources
-
-- PPI: [GTE-PPIS](https://github.com/Reverie-12/GTE-PPIS), revision
-  `bf004a586f61ffa8b8b8d5f6c66c9c82b731e5ae`, using the corrected GraphPPIS benchmarks.
-- SMPI/DPI/RPI labels: [ALLSites](https://github.com/idrblab/ALLSites), revision
-  `355d05f8d729c96e5ff2078817a93cdd840d78da`.
-- GTE-PPIS provides separate access routes for
-  [distance maps](https://drive.google.com/drive/folders/1UKX1dIrzrEPQpGyYcvIJlrm6KAKvNEpp?usp=drive_link)
-  and [PDB structures](https://drive.google.com/drive/folders/1eTjFtxsP4mnzyg5CXs96c3w4AxzYNW5N?usp=drive_link).
-
-Third-party datasets retain their original attribution and terms. No additional
-license is assigned to them by this repository.
