@@ -1,0 +1,12 @@
+base: base.yaml
+task: ppi
+data:
+  train: data/ppi/train/manifest.jsonl
+  test60: data/ppi/test60/manifest.jsonl
+  test315_28: data/ppi/test315_28/manifest.jsonl
+  bound25: data/ppi/bound25/manifest.jsonl
+  unbound25: data/ppi/unbound25/manifest.jsonl
+protocol:
+  cross_validation_folds: 5
+  refit_on_all_training_proteins: true
+  paired_runs: 10

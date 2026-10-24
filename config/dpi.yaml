@@ -1,0 +1,11 @@
+base: base.yaml
+task: dpi
+data:
+  train: data/dpi/train/manifest.jsonl
+  valid: data/dpi/valid/manifest.jsonl
+  test: data/dpi/test/manifest.jsonl
+protocol:
+  train_count: 458
+  valid_count: 115
+  test_count: 129
+  geometry_gate_coverage_scaling: true

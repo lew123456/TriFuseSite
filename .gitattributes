@@ -1,0 +1,17 @@
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.fa text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+*.tsv text eol=lf
+*.ipynb text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.npy binary
+*.npz binary
+*.pt binary
+dataset/** -text

@@ -1,0 +1,11 @@
+base: base.yaml
+task: rpi
+data:
+  train: data/rpi/train/manifest.jsonl
+  valid: data/rpi/valid/manifest.jsonl
+  test: data/rpi/test/manifest.jsonl
+protocol:
+  train_count: 396
+  valid_count: 99
+  test_count: 117
+  geometry_gate_coverage_scaling: true

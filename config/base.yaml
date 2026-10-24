@@ -1,0 +1,59 @@
+# TriFuseSite model and training configuration.
+model:
+  residue_feature_dim: 62
+  esm_dim: 1280
+  semantic_projection_dim: 256
+  hidden_dim: 256
+  classifier_dim: 128
+  num_classes: 2
+  graph_radius_angstrom: 14.0
+  radius_max_neighbors: 64
+  patch_pooling_ratio: 0.7
+  patch_layers: 3
+  global_graph_layers: 8
+  global_attention_heads: 4
+  geometry_neighbors: 24
+  geometry_layers: 2
+  geometry_attention_heads: 4
+  geometry_edge_dim: 24
+  rbf_channels: 8
+  rbf_min: 0.0
+  rbf_max: 20.0
+  rbf_width: 2.5
+  dropout: 0.1
+  initial_residual_weight: 0.7
+  identity_mapping_strength: 1.5
+  # Scalar gate initialization.
+  esm_gate_logit_init: -4.0
+  geometry_gate_logit_init: -1.3862944
+esm:
+  model: facebook/esm2_t33_650M_UR50D
+  representation_layer: 33
+  frozen: true
+  window_length: 1022
+  overlap: 128
+  stride: 894
+  cache_dtype: float16
+training:
+  optimizer: AdamW
+  learning_rate: 0.0002
+  weight_decay: 0.0001
+  batch_size: 1
+  gradient_clip: 1.0
+  # Validation-based checkpoint selection.
+  early_stopping_patience: 5
+  checkpoint_min_delta: 0.00001
+  precision: cuda_bfloat16
+  epoch_shuffle: seed_plus_epoch
+runtime:
+  epochs: 20
+  seed: 2025
+  class_weights: balanced
+  threshold_rule: validation_mcc
+  auprc_method: average_precision
+  threshold_grid_min: 0.05
+  threshold_grid_max: 0.95
+  threshold_grid_points: 181
+  # Seeds used by main_repeat.py.
+  paired_seeds: [2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034]
+  defaults_source: SMPI_train_eval

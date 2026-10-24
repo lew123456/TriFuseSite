@@ -1,0 +1,152 @@
+[
+  {
+    "pair_id": "3mcbA__3mceB",
+    "bound_id": "3mcbA",
+    "unbound_id": "3mceB",
+    "reported_bound_residue_range": "74-133"
+  },
+  {
+    "pair_id": "1qa9A__1cdbA",
+    "bound_id": "1qa9A",
+    "unbound_id": "1cdbA",
+    "reported_bound_residue_range": "1-105"
+  },
+  {
+    "pair_id": "1t6bY__1shuX",
+    "bound_id": "1t6bY",
+    "unbound_id": "1shuX",
+    "reported_bound_residue_range": "38-218"
+  },
+  {
+    "pair_id": "1qa9B__1ci5A",
+    "bound_id": "1qa9B",
+    "unbound_id": "1ci5A",
+    "reported_bound_residue_range": "1-95"
+  },
+  {
+    "pair_id": "3fjuA__2v77A",
+    "bound_id": "3fjuA",
+    "unbound_id": "2v77A",
+    "reported_bound_residue_range": "1-308"
+  },
+  {
+    "pair_id": "1ay7A__1lniA",
+    "bound_id": "1ay7A",
+    "unbound_id": "1lniA",
+    "reported_bound_residue_range": "1-96"
+  },
+  {
+    "pair_id": "2c0lA__2c0mC",
+    "bound_id": "2c0lA",
+    "unbound_id": "2c0mC",
+    "reported_bound_residue_range": "285-602"
+  },
+  {
+    "pair_id": "1wpxA__1yscA",
+    "bound_id": "1wpxA",
+    "unbound_id": "1yscA",
+    "reported_bound_residue_range": "1-421"
+  },
+  {
+    "pair_id": "4hluA__2yz2A",
+    "bound_id": "4hluA",
+    "unbound_id": "2yz2A",
+    "reported_bound_residue_range": "1-266"
+  },
+  {
+    "pair_id": "2c0lB__1qndA",
+    "bound_id": "2c0lB",
+    "unbound_id": "1qndA",
+    "reported_bound_residue_range": "1-123"
+  },
+  {
+    "pair_id": "2fhzB__3ao9A",
+    "bound_id": "2fhzB",
+    "unbound_id": "3ao9A",
+    "reported_bound_residue_range": "17-113"
+  },
+  {
+    "pair_id": "2g2uA__4fh4A",
+    "bound_id": "2g2uA",
+    "unbound_id": "4fh4A",
+    "reported_bound_residue_range": "26-292"
+  },
+  {
+    "pair_id": "3cbjA__3pbhA",
+    "bound_id": "3cbjA",
+    "unbound_id": "3pbhA",
+    "reported_bound_residue_range": "1A-254"
+  },
+  {
+    "pair_id": "1glaG__1glfO",
+    "bound_id": "1glaG",
+    "unbound_id": "1glfO",
+    "reported_bound_residue_range": "2-499"
+  },
+  {
+    "pair_id": "1ta3A__1om0A",
+    "bound_id": "1ta3A",
+    "unbound_id": "1om0A",
+    "reported_bound_residue_range": "1-274"
+  },
+  {
+    "pair_id": "2b42A__1t6eX",
+    "bound_id": "2b42A",
+    "unbound_id": "1t6eX",
+    "reported_bound_residue_range": "1-381"
+  },
+  {
+    "pair_id": "1jmoA__1jmjA",
+    "bound_id": "1jmoA",
+    "unbound_id": "1jmjA",
+    "reported_bound_residue_range": "61-480"
+  },
+  {
+    "pair_id": "1b6cB__1iasA",
+    "bound_id": "1b6cB",
+    "unbound_id": "1iasA",
+    "reported_bound_residue_range": "171-500"
+  },
+  {
+    "pair_id": "2v4zB__2af0A",
+    "bound_id": "2v4zB",
+    "unbound_id": "2af0A",
+    "reported_bound_residue_range": "58-203"
+  },
+  {
+    "pair_id": "1ewyC__1czpA",
+    "bound_id": "1ewyC",
+    "unbound_id": "1czpA",
+    "reported_bound_residue_range": "1-98"
+  },
+  {
+    "pair_id": "7ceiB__1m08A",
+    "bound_id": "7ceiB",
+    "unbound_id": "1m08A",
+    "reported_bound_residue_range": "446-576"
+  },
+  {
+    "pair_id": "1r8sE__1r8mE",
+    "bound_id": "1r8sE",
+    "unbound_id": "1r8mE",
+    "reported_bound_residue_range": "51-246"
+  },
+  {
+    "pair_id": "3fmoA__2oitA",
+    "bound_id": "3fmoA",
+    "unbound_id": "2oitA",
+    "reported_bound_residue_range": "1-434"
+  },
+  {
+    "pair_id": "4e6nB__4dqzA",
+    "bound_id": "4e6nB",
+    "unbound_id": "4dqzA",
+    "reported_bound_residue_range": "1-223"
+  },
+  {
+    "pair_id": "1gl4A__1h4uA",
+    "bound_id": "1gl4A",
+    "unbound_id": "1h4uA",
+    "reported_bound_residue_range": "367-631"
+  }
+]

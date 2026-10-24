@@ -1,0 +1,11 @@
+base: base.yaml
+task: smpi
+data:
+  train: data/smpi/train/manifest.jsonl
+  valid: data/smpi/valid/manifest.jsonl
+  test: data/smpi/test/manifest.jsonl
+protocol:
+  train_count: 1628
+  valid_count: 348
+  test_count: 348
+  geometry_gate_coverage_scaling: true
