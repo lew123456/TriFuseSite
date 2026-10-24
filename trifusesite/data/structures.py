@@ -6,12 +6,6 @@ from Bio.PDB import PDBParser, MMCIFParser
 from Bio.SeqUtils import seq1
 
 def map_structure(sequence, path, chain_hint=None, confidence_mode='observed'):
-    """First-model, exact-identity sequence mapping (Supplementary S1).
-
-    confidence_mode='plddt': CA B-factor/100 for AlphaFold structures only.
-    'observed': unit confidence at experimentally observed CA positions.
-    Crystal B-factors are never implicitly treated as pLDDT.
-    """
     n = len(sequence)
     empty = (np.zeros((n, 3, 3), np.float32), np.zeros((n, 3), bool),
              np.zeros(n, np.float32), '')

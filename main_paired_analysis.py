@@ -1,4 +1,3 @@
-"""Summarize 10 repeated evaluations of the 25 bound/unbound pairs."""
 import argparse
 import json
 from pathlib import Path

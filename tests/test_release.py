@@ -22,7 +22,6 @@ ROOT = Path(__file__).resolve().parents[1]
 torch.set_num_threads(1)
 
 def synthetic_inputs(n=9, mask=None):
-    # Synthetic numerical fixtures, never experimental data.
     rng = np.random.default_rng(17)
     ca = rng.normal(size=(n, 3)).astype(np.float32)*3
     mask = np.ones(n, bool) if mask is None else np.asarray(mask, bool)
@@ -51,7 +50,6 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(t['precision'],'cuda_bfloat16')
 
     def test_bfloat16_autocast_forward_backward(self):
-        # CPU autocast checks mixed dtypes; it is not a CUDA performance test.
         model=TriFuseSite(task='smpi')
         with torch.autocast('cpu',dtype=torch.bfloat16):
             logits=model(**synthetic_inputs())
@@ -155,7 +153,6 @@ class DataMetricTests(unittest.TestCase):
         grid=np.linspace(.05,.95,181)
         expected=float(grid[np.argmax([matthews_corrcoef(y,p>=t) for t in grid])])
         self.assertEqual(validation_mcc_threshold([{'labels':y,'probabilities':p}]),expected)
-        # Every threshold has a tied MCC=0: choose smallest grid value.
         self.assertEqual(validation_mcc_threshold([{'labels':[0,1],'probabilities':[1.,1.]}]),.05)
 
     def test_balanced_weights_training_only(self):
@@ -185,7 +182,7 @@ class DataMetricTests(unittest.TestCase):
     def test_radius_mask_and_cap(self):
         xyz = np.zeros((100,3), np.float32)
         a, edges, edge, _ = radius_graph(xyz, np.ones(100,bool))
-        self.assertTrue(np.max(np.bincount(edges[1])) <= 65)  # 64 neighbors plus self
+        self.assertTrue(np.max(np.bincount(edges[1])) <= 65)
         self.assertTrue(np.allclose(a, a.T))
         xyz[1] = [999,999,999]
         a, edges, edge, fallback = radius_graph(xyz[:3], [1,0,1])

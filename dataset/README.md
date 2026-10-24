@@ -66,8 +66,8 @@ use pLDDT/100.
 Supply the benchmark arrays using `--ppi-geometry-root` with the following layout:
 
 ```text
-pseudopositions/<protein_id>.npy   # [L,3], Angstrom
-distance_map/<protein_id>.npy      # [L,L], Angstrom
+pseudopositions/<protein_id>.npy
+distance_map/<protein_id>.npy
 ```
 
 PPI features concatenate PSSM (20), HMM (20), DSSP (14), resAF (7), and

@@ -1,4 +1,3 @@
-"""Train one task using the manuscript architecture and Table S2 optimizer."""
 from __future__ import annotations
 import argparse
 import json

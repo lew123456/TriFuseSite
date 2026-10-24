@@ -1,4 +1,3 @@
-"""Five-fold PPI hyperparameter comparison on the training set only."""
 from __future__ import annotations
 import argparse
 import numpy as np

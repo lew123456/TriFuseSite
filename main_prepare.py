@@ -1,4 +1,3 @@
-"""Prepare caches from sequence-indexed records without changing any labels."""
 from __future__ import annotations
 import argparse
 from pathlib import Path

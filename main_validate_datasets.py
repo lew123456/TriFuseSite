@@ -1,4 +1,3 @@
-"""Validate bundled real sequences, labels, split membership and checksums."""
 from pathlib import Path
 import argparse
 import hashlib

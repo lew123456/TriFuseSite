@@ -1,4 +1,3 @@
-"""Preserve supplied benchmark test sets; split only training records."""
 from __future__ import annotations
 import argparse
 import json
@@ -22,7 +21,6 @@ if __name__ == '__main__':
     order = list(range(len(rows)))
     random.Random(a.seed).shuffle(order)
     validation = set(order[:a.validation_count])
-    # Explicit paths prevent accidental reinterpretation after moving manifests.
     for row in rows:
         for key in ('npz', 'esm'):
             row[key] = str(resolve_path(source.parent, row[key]).resolve())

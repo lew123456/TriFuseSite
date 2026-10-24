@@ -43,11 +43,6 @@ def evaluate_rows(rows, threshold, auprc_method):
             'auprc_method': auprc_method, 'aggregation': 'pooled_valid_residues'}
 
 def validation_mcc_threshold(rows, grid_min=0.05, grid_max=0.95, grid_points=181):
-    """SMPI rule: validation MCC, 181 thresholds in [0.05,0.95].
-
-    Use p >= threshold; the first (smallest) threshold wins a tied maximum.
-    Invoke only on held-out validation or training-set out-of-fold predictions.
-    """
     y = np.concatenate([np.asarray(r['labels']) for r in rows])
     p = np.concatenate([np.asarray(r['probabilities']) for r in rows])
     valid = np.isin(y, [0, 1])

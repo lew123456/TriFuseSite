@@ -1,4 +1,3 @@
-"""Tests for actual bundled data and safe input preparation (no training)."""
 import json
 import tempfile
 import unittest

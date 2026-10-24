@@ -1,4 +1,3 @@
-"""Run the explicit seed schedule with one separately trained model per run."""
 from __future__ import annotations
 import argparse
 import json
@@ -33,7 +32,6 @@ def build_plan(config_path, output, seeds=None, epochs=None, device='cpu'):
                 cv += ['--epochs', str(epochs)]
             commands.append({'seed': seed, 'stage': 'five_fold_selection', 'argv': cv})
             train += ['--refit', '--cv-selection', str(run_dir/'cv/selection.json')]
-            # Refit duration comes from training-only fold selection.
             evaluations = [('bound25', config['data']['bound25']), ('unbound25', config['data']['unbound25'])]
         else:
             if epochs is not None:

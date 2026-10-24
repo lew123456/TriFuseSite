@@ -5,11 +5,6 @@ import json
 
 @dataclass(frozen=True)
 class ModelConfig:
-    """Architectural settings from Methods 4.2–4.4 and Supplementary Table S1.
-
-    Gate initializations and the 24-channel padded geometry layout are inherited
-    implementation choices, not parameters specified in Table S1.
-    """
     residue_feature_dim: int = 62
     esm_dim: int = 1280
     semantic_projection_dim: int = 256
@@ -48,7 +43,6 @@ class ModelConfig:
         return asdict(self)
 
 def load_config(path):
-    """JSON and YAML are supported; reject unknown model options."""
     path = Path(path)
     if path.suffix.lower() == '.json':
         config = json.loads(path.read_text(encoding='utf-8'))

@@ -1,4 +1,3 @@
-"""Prepare the bundled benchmark splits with explicit structural inputs."""
 from __future__ import annotations
 import argparse
 import json
@@ -12,7 +11,6 @@ def load_catalog(root=ROOT):
     return json.loads((Path(root)/'dataset/metadata/partition_catalog.json').read_text(encoding='utf-8'))['partitions']
 
 def load_structure_index(path):
-    """JSONL: task, id, path (relative to this index, or explicit null), reason."""
     if path is None:
         return {}
     path=Path(path).resolve()

@@ -1,4 +1,3 @@
-"""Pooled and per-protein evaluation at a fixed checkpoint threshold."""
 import argparse
 import torch
 from trifusesite.engine import load_checkpoint, predict, write_json

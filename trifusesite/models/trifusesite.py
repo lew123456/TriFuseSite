@@ -7,12 +7,6 @@ from ..modules.graph import DualScaleGraphEncoder
 from ..modules.geometry import DistanceGeometryEncoder, build_distance_geometry_graph
 
 class TriFuseSite(nn.Module):
-    """One shared architecture; separately trained weights for four tasks.
-
-    No CRF, directional/rotation features, or joint multitask training.
-    PPI retains the supplied Patch/Global graphs when C-alpha atoms are missing.
-    Other tasks scale the geometry gate by whole-protein structural coverage.
-    """
     def __init__(self, config=None, task='ppi'):
         super().__init__()
         if task not in ('ppi', 'smpi', 'dpi', 'rpi'):

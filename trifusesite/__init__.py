@@ -1,4 +1,3 @@
-"""TriFuseSite manuscript-aligned source release."""
 from .config import ModelConfig
 from .models.trifusesite import TriFuseSite
 

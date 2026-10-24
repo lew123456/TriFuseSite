@@ -1,4 +1,3 @@
-"""Frozen layer-33 ESM-2 embeddings: 1022 window, 128 overlap, 894 stride."""
 from __future__ import annotations
 import argparse
 from pathlib import Path

@@ -1,4 +1,3 @@
-"""Import >ID / SEQUENCE / binary-label records without remapping labels."""
 import argparse
 import sys
 from pathlib import Path

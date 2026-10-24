@@ -14,7 +14,6 @@ def segment_softmax(
     destination: torch.Tensor,
     num_nodes: int,
 ) -> torch.Tensor:
-    """Softmax over incoming edges for every destination node."""
     squeeze = scores.ndim == 1
     if squeeze:
         scores = scores[:, None]
@@ -39,7 +38,6 @@ def adjacency_matmul(adjacency: torch.Tensor, features: torch.Tensor) -> torch.T
 
 
 class ResidualGraphConvolution(nn.Module):
-    """Residual GCNII-style propagation used inside the patch branch."""
 
     def __init__(self, hidden_dim: int):
         super().__init__()
@@ -68,7 +66,6 @@ class ResidualGraphConvolution(nn.Module):
 
 
 class InterfacePatchEncoder(nn.Module):
-    """GCN-scored top-k interface patches with two-hop propagation."""
 
     def __init__(self, config: ModelConfig):
         super().__init__()
@@ -122,7 +119,6 @@ class InterfacePatchEncoder(nn.Module):
 
 
 class EdgeAwareGraphAttention(nn.Module):
-    """Global residue-graph attention with distance/cosine edge features."""
 
     def __init__(self, hidden_dim: int, edge_dim: int = 2, heads: int = 4):
         super().__init__()
@@ -162,8 +158,6 @@ class EdgeAwareGraphAttention(nn.Module):
             projected[source]
             + self.edge_message_projection(edge_for_attention).view(-1, self.heads, self.head_dim)
         ) * weights[..., None]
-        # Attention parameters may promote scores to FP32 under BF16 autocast.
-        # Accumulate in the message dtype rather than mixing index_add_ dtypes.
         aggregate = torch.zeros(projected.shape, device=projected.device, dtype=messages.dtype)
         return aggregate.index_add_(0, destination, messages).flatten(1)
 
@@ -198,7 +192,6 @@ class GraphPropagationBlock(nn.Module):
 
 
 class GlobalGraphEncoder(nn.Module):
-    """Eight-layer global AGAT branch."""
 
     def __init__(self, config: ModelConfig):
         super().__init__()
@@ -254,7 +247,6 @@ class GlobalGraphEncoder(nn.Module):
 
 
 class BranchCrossAttention(nn.Module):
-    """One-head patch-to-global cross-branch attention."""
 
     def __init__(self, hidden_dim: int):
         super().__init__()
@@ -271,7 +263,6 @@ class BranchCrossAttention(nn.Module):
         query = F.relu(self.query(patch_hidden))
         key = F.relu(self.key(patch_hidden))
         value = F.relu(self.value(global_hidden))
-        # Full-chain attention in Eq. (7), not a radius-neighbor approximation.
         attended = F.scaled_dot_product_attention(
             query[None, None], key[None, None], value[None, None], dropout_p=0.0
         )[0, 0]
@@ -279,7 +270,6 @@ class BranchCrossAttention(nn.Module):
 
 
 class DualScaleGraphEncoder(nn.Module):
-    """Patch branch + global AGAT branch + cross-branch fusion."""
 
     def __init__(self, config: ModelConfig):
         super().__init__()

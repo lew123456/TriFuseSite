@@ -23,18 +23,18 @@ task-specific data paths are in `config/ppi.yaml`, `smpi.yaml`, `dpi.yaml`, and 
 
 ```text
 TriFuseSite/
-├── config/                 # Model and training configurations
-├── dataset/                # Benchmark sequences, labels, splits and PPI features
+├── config/
+├── dataset/
 ├── trifusesite/
-│   ├── models/             # TriFuseSite model
-│   ├── modules/            # Semantic, graph and geometric encoders
-│   ├── data/               # Feature extraction, graphs and data loaders
-│   ├── losses/             # Class-weighted loss
-│   ├── engine.py           # Training and inference
-│   ├── metrics.py          # Residue-level evaluation
-│   └── statistics.py       # Paired-structure statistics
-├── scripts/                # Input conversion utilities
-├── tests/                  # Model and data tests
+│   ├── models/
+│   ├── modules/
+│   ├── data/
+│   ├── losses/
+│   ├── engine.py
+│   ├── metrics.py
+│   └── statistics.py
+├── scripts/
+├── tests/
 ├── main_prepare_datasets.py
 ├── main_extract_esm.py
 ├── main_train.py

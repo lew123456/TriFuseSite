@@ -22,7 +22,6 @@ def resolve_path(base, value):
     return p if p.is_absolute() else Path(base) / p
 
 class ProteinDataset:
-    """One complete, sequence-indexed protein per sample; never pad/drop residues."""
     def __init__(self, manifest, task):
         self.manifest = Path(manifest).resolve()
         self.records = read_jsonl(self.manifest)

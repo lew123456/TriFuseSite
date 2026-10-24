@@ -1,4 +1,3 @@
-"""Import non-PPI feature caches and rebuild the model's graph inputs."""
 from __future__ import annotations
 import argparse
 import shutil

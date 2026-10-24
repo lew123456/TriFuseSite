@@ -1,4 +1,3 @@
-"""Predict all residues, including positions with unavailable structure."""
 import argparse
 import torch
 from trifusesite.engine import load_checkpoint, predict

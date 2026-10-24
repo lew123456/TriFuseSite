@@ -60,7 +60,6 @@ def balanced_weights(dataset):
 def train(config, training, validation, output, *, epochs, seed, class_weights,
           auprc_method, threshold=None, fit_threshold=False, device='cpu',
           threshold_provenance=None):
-    """Train a task model with optional validation-based checkpoint selection."""
     if epochs < 1:
         raise ValueError('epochs must be positive')
     if fit_threshold and validation is None:
@@ -76,7 +75,6 @@ def train(config, training, validation, output, *, epochs, seed, class_weights,
     if validation is not None and train_ids & {validation[i]['id'] for i in range(len(validation))}:
         raise ValueError('Training/validation protein IDs overlap')
     if validation is not None:
-        # AP checkpoint selection needs a well-defined validation task.
         valid_classes = set()
         for sample in validation:
             valid_classes.update(sample['labels'][sample['labels'] >= 0].tolist())
@@ -131,7 +129,7 @@ def train(config, training, validation, output, *, epochs, seed, class_weights,
             record['validation'] = validation_metrics['pooled']
             score = validation_metrics['pooled']['AUPRC']
         else:
-            score = float(epoch)  # Refit uses the final specified epoch, not a test set.
+            score = float(epoch)
         if validation is None or score > best_score + min_delta:
             best_score, best_epoch = score, epoch
             stale = 0

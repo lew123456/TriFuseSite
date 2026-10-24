@@ -5,10 +5,6 @@ from scipy.stats import wilcoxon
 METRICS = ('ACC', 'Precision', 'Recall', 'F1', 'MCC', 'AUROC', 'AUPRC', 'Brier')
 
 def paired_summary(bound_runs, unbound_runs, pairs, *, bootstrap_seed, bootstrap_samples=10000):
-    """S3: average each protein across runs, then test 25 protein-level deltas.
-
-    Confidence intervals use percentile bootstrapping over paired proteins.
-    """
     if len(bound_runs) != 10 or len(unbound_runs) != 10 or len(pairs) != 25:
         raise ValueError('The manuscript paired protocol requires 10 runs and 25 protein pairs')
     seeds = [r['seed'] for r in bound_runs]

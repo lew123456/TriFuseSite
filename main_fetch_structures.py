@@ -1,4 +1,3 @@
-"""List and download PDB or AlphaFold coordinate inputs."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -36,7 +35,6 @@ def fetch(request,root=ROOT):
             with urllib.request.urlopen(req,timeout=45) as response:payload=response.read()
             if not is_structure(payload):raise ValueError('Response is not a recognizable coordinate file')
             destination.parent.mkdir(parents=True,exist_ok=True)
-            # Exclusive creation: existing files are never silently overwritten.
             with destination.open('xb') as handle:handle.write(payload)
             return dict(row,path=destination.relative_to(root).as_posix(),url=url,status='downloaded',sha256=hashlib.sha256(payload).hexdigest())
         except (OSError,ValueError,urllib.error.URLError) as error:

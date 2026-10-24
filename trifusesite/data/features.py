@@ -7,8 +7,6 @@ from Bio.Align import substitution_matrices
 AA = "ACDEFGHIKLMNPQRSTVWY"
 AA_INDEX = {a: i for i, a in enumerate(AA)}
 
-# Kyte-Doolittle hydropathy, approximate volume, polarity, charge, aromatic,
-# flexibility and helix propensity. Columns are standardized below.
 PROPS = {
     "A": [1.8, 88.6, 8.1, 0, 0, 0.36, 1.45], "C": [2.5, 108.5, 5.5, 0, 0, 0.35, 0.77],
     "D": [-3.5, 111.1, 13.0, -1, 0, 0.51, 0.98], "E": [-3.5, 138.4, 12.3, -1, 0, 0.50, 1.53],
@@ -22,7 +20,6 @@ PROPS = {
     "W": [-0.9, 227.8, 5.4, 0, 1, 0.31, 1.14], "Y": [-1.3, 193.6, 6.2, 0, 1, 0.42, 0.61],
 }
 
-# Index both BLOSUM62 axes by the declared amino-acid alphabet.
 _standard_blosum = substitution_matrices.load('BLOSUM62')
 BLOSUM = np.array([[_standard_blosum[a, b] for b in AA] for a in AA], dtype=np.float32)
 PROP = np.array([PROPS[a] for a in AA], dtype=np.float32)
@@ -30,10 +27,6 @@ PROP = (PROP - PROP.mean(0)) / (PROP.std(0) + 1e-6)
 
 
 def handcrafted62(sequence: str) -> np.ndarray:
-    """The 62D sequence descriptor for SMPI/DPI/RPI (Methods 4.2.1).
-
-    PPI must use its precomputed evolutionary/structural descriptors instead.
-    """
     sequence = sequence.upper()
     if not sequence:
         raise ValueError('Empty sequences are not supported')

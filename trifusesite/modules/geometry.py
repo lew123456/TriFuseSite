@@ -7,13 +7,6 @@ from ..config import ModelConfig
 from .graph import segment_softmax
 
 def build_distance_geometry_graph(ca, mask, confidence, config=None):
-    """C-alpha kNN geometry, excluding every invalid coordinate from distances.
-
-    Channels: 8 RBF, 12 reserved zeros, log sequence gap, long-gap flag,
-    pair confidence, pair validity. Reserved channels carry no directions.
-    Confidence is supplied explicitly in [0, 1]. N/C atoms are not needed
-    to define a distance-only C-alpha edge.
-    """
     c = config or ModelConfig()
     n = len(ca)
     if ca.shape != (n, 3) or mask.shape != (n,) or confidence.shape != (n,):
@@ -29,7 +22,6 @@ def build_distance_geometry_graph(ca, mask, confidence, config=None):
     dist = torch.cdist(xyz, xyz)
     dist.fill_diagonal_(torch.inf)
     k = min(c.geometry_neighbors, len(valid_ids) - 1)
-    # Stable ordering also makes equal-distance ties deterministic.
     nearest = torch.argsort(dist, dim=1, stable=True)[:, :k]
     destination = valid_ids.repeat_interleave(k)
     source = valid_ids[nearest.flatten()]
@@ -46,7 +38,6 @@ def build_distance_geometry_graph(ca, mask, confidence, config=None):
     return {'edge_index': torch.stack([source, destination]), 'edge_features': edge}
 
 class DistanceGeometryLayer(nn.Module):
-    """Four-head masked neighbor attention followed by a residual FFN, Eq. (6)."""
     def __init__(self, config):
         super().__init__()
         d = config.hidden_dim
@@ -65,7 +56,6 @@ class DistanceGeometryLayer(nn.Module):
 
     def forward(self, hidden, geometry):
         edge = geometry['edge_features']
-        # Filter invalid edges before softmax, including all-invalid neighborhoods.
         keep = edge[:, -1] > 0.5
         source, destination = geometry['edge_index'][:, keep].long()
         edge = edge[keep]
